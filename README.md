@@ -18,5 +18,5 @@ BenchmarkStructModify-4          	1000000000	         2.95 ns/op	       0 B/op	 
 ## Conclusion
 
 In this case, we see that struct outperform map and array of structs.
-However time to modify array of structs is close to the one to modify the struct itself and would add a lot of clarity in the code.
-We should discuss it.
+However time to modify array of structs is close to the one to modify the struct itself.
+So me should consider using an array of structs which might simplify the agent code.
