@@ -46,3 +46,12 @@ func BenchmarkStructModifyReflect(b *testing.B) {
 		}
 	}
 }
+
+func BenchmarkStructTags(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		t := reflect.TypeOf(s).Elem()
+		for i := 0; i < t.NumField(); i++ {
+			_ = string(t.Field(i).Tag)
+		}
+	}
+}
