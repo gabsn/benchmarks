@@ -43,7 +43,7 @@ In this benchmark, I spawned 10 concurrent goroutines for each operation trying 
 
 You can see below the overhead of using the `WriteTo` method to copy a buffer from the first pool to a buffer from the second pool compared with only using one pool.
 
-![WriteTo overhead]()
+![Second pool overhead](https://raw.github.com/gabsn/benchmarks/img/second-pool-overhead.png)
 
 ## Struct VS Array VS Map
 ### Run
