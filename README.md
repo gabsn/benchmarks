@@ -39,7 +39,11 @@ BenchmarkConcurrentTwoChanPoolCopyBuffer-4   	  200000	      7550 ns/op	       0
 We clearly see that we should use `sync.Pool` instead of `chan *bytes.Buffer` to implement the pool in this case. Then, we see that we should use `WriteTo` method instead of `Copy` or `CopyBuffer` when we use two pools. Finally, we see that we are _twice slower when using two pools instead of one pool_. We should also note that in both implementations, we manage to avoid allocations when dealing with those buffers.
 
 - **Concurrent benchmark**
-In this benchmark, I spawned 10 concurrent goroutines for each operation trying to access the pool, write into a buffer and put it back to the pool. In this case, we see that the channel implementation of the buffer pool is _only 20% slower_ than the `sync.Pool` implementation. Moreover copying the buffers two the second pool with the `WriteTo` method only takes _20% more time than when we do not use the second pool_, which is more acceptable than the 100% with synchronous operations.
+In this benchmark, I spawned 10 concurrent goroutines for each operation trying to access the pool, write into a buffer and put it back to the pool. In this case, we see that the channel implementation of the buffer pool is _only 20% slower_ than the `sync.Pool` implementation. Moreover copying the buffers two the second pool with the `WriteTo` method only takes _20% more time than when we do not use the second pool_, which is more acceptable than the 100% with synchronous operations. 
+
+You can see below the overhead of using the `WriteTo` method to copy a buffer from the first pool to a buffer from the second pool compared with only using one pool.
+
+![WriteTo overhead]()
 
 ## Struct VS Array VS Map
 ### Run
