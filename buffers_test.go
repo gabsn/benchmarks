@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-const MaxGoroutines = 10
+const MaxGoroutines = 25
 
 func BenchmarkOnePool(b *testing.B) {
 	pool := NewBufferPool()
