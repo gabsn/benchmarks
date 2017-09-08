@@ -1,7 +1,7 @@
 # benchmarks
 Some go benchmarks I used to make smart implementation choices.
 
-## sync.Pool VS channel for a buffer pool
+## sync.Pool VS channel
 ### Run
 ```
 go test -bench=Pool -benchmem
@@ -20,9 +20,9 @@ BenchmarkTwoPoolCopyBuffer-4       	 2000000	       985 ns/op	       0 B/op	    
 BenchmarkTwoChanPoolCopyBuffer-4   	 1000000	      1924 ns/op	       0 B/op	       0 allocs/op
 ```
 ### Conclusion
-We clearly see that we should use `sync.Pool` instead of `chan *bytes.Buffer` to implement the pool in this case. Then, we see that we should use `WriteTo` method instead of `Copy` or `CopyBuffer` when we use two pools. Finally, we see that we are _twice slower when using two pools instead of one pool_.
+We clearly see that we should use `sync.Pool` instead of `chan *bytes.Buffer` to implement the pool in this case. Then, we see that we should use `WriteTo` method instead of `Copy` or `CopyBuffer` when we use two pools. Finally, we see that we are _twice slower when using two pools instead of one pool_. We should also note that in both implementations, we manage to avoid allocations when dealing with those buffers.
 
-## Struct VS Array VS Map to hold metrics
+## Struct VS Array VS Map
 ### Run
 `go test -bench "Struct|Map|Array" -benchmem`
 ### Output
