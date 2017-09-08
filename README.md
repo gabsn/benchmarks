@@ -6,18 +6,33 @@ Some go benchmarks I used to make smart implementation choices.
 ```
 go test -bench=Pool -benchmem
 ```
-### Output
+### Output 
+- **Synchronous Operations**
 ```
-BenchmarkOnePool-4                 	 3000000	       436 ns/op	       0 B/op	       0 allocs/op
-BenchmarkOneChanPool-4             	 2000000	       844 ns/op	       0 B/op	       0 allocs/op
-BenchmarkTwoPoolNoCopy-4           	 2000000	       647 ns/op	       0 B/op	       0 allocs/op
-BenchmarkTwoChanPoolNoCopy-4       	 1000000	      1647 ns/op	       0 B/op	       0 allocs/op
-BenchmarkTwoPoolWriteTo-4          	 2000000	       773 ns/op	       0 B/op	       0 allocs/op
-BenchmarkTwoChanPoolWriteTo-4      	 1000000	      1736 ns/op	       0 B/op	       0 allocs/op
-BenchmarkTwoPoolCopy-4             	 2000000	       940 ns/op	       0 B/op	       0 allocs/op
-BenchmarkTwoChanPoolCopy-4         	 1000000	      1899 ns/op	       0 B/op	       0 allocs/op
-BenchmarkTwoPoolCopyBuffer-4       	 2000000	       985 ns/op	       0 B/op	       0 allocs/op
-BenchmarkTwoChanPoolCopyBuffer-4   	 1000000	      1924 ns/op	       0 B/op	       0 allocs/op
+BenchmarkOnePool-4                           	30000000	        41.3 ns/op	       0 B/op	       0 allocs/op
+BenchmarkOneChanPool-4                       	20000000	        84.3 ns/op	       0 B/op	       0 allocs/op
+BenchmarkTwoPoolNoCopy-4                     	20000000	        62.2 ns/op	       0 B/op	       0 allocs/op
+BenchmarkTwoChanPoolNoCopy-4                 	10000000	       171 ns/op	       0 B/op	       0 allocs/op
+BenchmarkTwoPoolWriteTo-4                    	20000000	        77.5 ns/op	       0 B/op	       0 allocs/op
+BenchmarkTwoChanPoolWriteTo-4                	10000000	       171 ns/op	       0 B/op	       0 allocs/op
+BenchmarkTwoPoolCopy-4                       	20000000	        94.2 ns/op	       0 B/op	       0 allocs/op
+BenchmarkTwoChanPoolCopy-4                   	10000000	       189 ns/op	       0 B/op	       0 allocs/op
+BenchmarkTwoPoolCopyBuffer-4                 	20000000	        91.3 ns/op	       0 B/op	       0 allocs/op
+BenchmarkTwoChanPoolCopyBuffer-4             	10000000	       201 ns/op	       0 B/op	       0 allocs/op
+```
+
+- **Concurrent Operations**
+```
+BenchmarkConcurrentOnePool-4                 	  300000	      3965 ns/op	       0 B/op	       0 allocs/op
+BenchmarkConcurrentOneChanPool-4             	  300000	      5129 ns/op	       0 B/op	       0 allocs/op
+BenchmarkConcurrentTwoPoolNoCopy-4           	  300000	      4605 ns/op	       0 B/op	       0 allocs/op
+BenchmarkConcurrentTwoChanPoolNoCopy-4       	  200000	      6682 ns/op	       0 B/op	       0 allocs/op
+BenchmarkConcurrentTwoPoolWriteTo-4          	  300000	      4835 ns/op	       0 B/op	       0 allocs/op
+BenchmarkConcurrentTwoChanPoolWriteTo-4      	  200000	      6903 ns/op	       0 B/op	       0 allocs/op
+BenchmarkConcurrentTwoPoolCopy-4             	  300000	      4953 ns/op	       0 B/op	       0 allocs/op
+BenchmarkConcurrentTwoChanPoolCopy-4         	  200000	      7325 ns/op	       0 B/op	       0 allocs/op
+BenchmarkConcurrentTwoPoolCopyBuffer-4       	  300000	      5691 ns/op	       0 B/op	       0 allocs/op
+BenchmarkConcurrentTwoChanPoolCopyBuffer-4   	  200000	      7550 ns/op	       0 B/op	       0 allocs/op
 ```
 ### Conclusion
 We clearly see that we should use `sync.Pool` instead of `chan *bytes.Buffer` to implement the pool in this case. Then, we see that we should use `WriteTo` method instead of `Copy` or `CopyBuffer` when we use two pools. Finally, we see that we are _twice slower when using two pools instead of one pool_. We should also note that in both implementations, we manage to avoid allocations when dealing with those buffers.
